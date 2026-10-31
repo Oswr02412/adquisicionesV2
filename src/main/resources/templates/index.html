@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sistema de Adquisiciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(-45deg, #2b1d3d, #4a2f4c, #2b3b6c, #1f2b4a); background-size: 400% 400%; animation: gradientBG 15s ease infinite; height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .login-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 40px 30px; width: 340px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); text-align: center; }
+        .avatar { width: 90px; height: 90px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 30px auto; font-size: 40px; color: rgba(255, 255, 255, 0.5); }
+        .input-group { position: relative; margin-bottom: 25px; text-align: left; }
+        .input-group i { position: absolute; left: 0; top: 10px; font-size: 14px; color: rgba(255, 255, 255, 0.7); }
+        .input-group input, .input-group select { width: 100%; padding: 10px 10px 10px 25px; background: transparent; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.4); color: #fff; font-size: 13px; outline: none; transition: 0.3s; }
+        .input-group input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .input-group input:focus, .input-group select:focus { border-bottom: 1px solid #fff; }
+        .input-group select option { background: #2b1d3d; color: #fff; }
+        .options { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-bottom: 30px; }
+        .options label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .options a { color: rgba(255, 255, 255, 0.6); text-decoration: none; transition: 0.3s; }
+        .options a:hover { color: #fff; }
+        .btn-login { width: 100%; padding: 12px; background: linear-gradient(90deg, #481d4a, #44599a); border: none; border-radius: 8px; color: white; font-size: 13px; font-weight: bold; letter-spacing: 1px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-login:hover { filter: brightness(1.15); }
+        .error { color: #ff7675; font-size: 12px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="avatar">
+        <i class="fa-solid fa-user"></i>
+    </div>
+    
+    <form action="/login" method="POST">
+        <div class="input-group">
+            <i class="fa-solid fa-user-circle"></i>
+            <input type="text" name="email" placeholder="Usuario" required>
+        </div>
+        
+        <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" name="password" id="passwordField" placeholder="Contraseña" required>
+            <i class="fa-solid fa-eye" id="togglePassword" style="left: auto; right: 10px; cursor: pointer; pointer-events: auto;"></i>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-database"></i>
+            <select name="dbType" id="dbType">
+                <option value="SQLServer">Conectar a SQL Server</option>
+                <option value="PostgreSQL">Conectar a PostgreSQL</option>
+            </select>
+        </div>
+
+        <div class="options">
+            <label><input type="checkbox"> Recordarme</label>
+            <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn-login">INGRESAR</button>
+    </form>
+
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+</div>
+
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordField = document.querySelector('#passwordField');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú Principal - Adquisiciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #2b1d3d, #4a2f4c, #2b3b6c, #1f2b4a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            width: 700px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-card h2 {
+            margin-bottom: 5px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 24px;
+        }
+
+        .db-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 30px;
+            color: #bbfac0;
+            letter-spacing: 0.5px;
+        }
+
+        .db-badge i { margin-right: 5px; }
+
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        }
+
+        .btn-menu {
+            display: flex; align-items: center; justify-content: flex-start; gap: 12px;
+            padding: 15px 20px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px;
+            color: white; text-decoration: none; font-size: 14px;
+            font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease;
+        }
+
+        .btn-menu:hover {
+            background: linear-gradient(90deg, #481d4a, #44599a);
+            border-color: transparent; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-logout { 
+            grid-column: span 2; 
+            justify-content: center;
+            margin-top: 15px; 
+            background: rgba(255, 75, 75, 0.15); 
+            border-color: rgba(255, 75, 75, 0.3); 
+            color: #ffb3b3; 
+        }
+        
+        .btn-logout:hover { 
+            background: linear-gradient(90deg, #8a2a2a, #b34747); 
+            color: white; 
+        }
+        
+        .btn-menu i { font-size: 18px; width: 25px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="menu-card">
+    <h2>Bienvenido, <span th:text="${session.usuarioLogueado != null ? session.usuarioLogueado.nombre : 'Administrador'}"></span></h2>
+    <div class="db-badge">
+        <i class="fa-solid fa-server"></i> Conectado a: <span th:text="${dbUsada}"></span>
+    </div>
+
+    <div class="menu-grid">
+        <a th:href="@{/sucursales(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-building"></i> Gestión de Sucursales
+        </a>
+        <a th:href="@{/departamentos(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-sitemap"></i> Gestión de Departamentos
+        </a>
+        <a th:href="@{/proveedores(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-truck-fast"></i> Gestión de Proveedores
+        </a>
+        <a th:href="@{/productos(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-box-open"></i> Gestión de Productos
+        </a>
+        <a th:href="@{/pedidos(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-cart-shopping"></i> Pedidos Internos
+        </a>
+        <a th:href="@{/ordenes(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-file-invoice"></i> Órdenes de Compra
+        </a>
+        <a th:href="@{/ofertas(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-handshake"></i> Recepción de Ofertas
+        </a>
+        <a th:href="@{/adjudicaciones(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-gavel"></i> Adjudicaciones
+        </a>
+        <a th:href="@{/reportes(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-chart-line"></i> Módulo de Reportes
+        </a>
+        <a th:href="@{/seguridad(db=${dbUsada})}" class="btn-menu">
+            <i class="fa-solid fa-shield-halved"></i> Seguridad y Roles
+        </a>
+        
+        <a th:href="@{/}" class="btn-menu btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

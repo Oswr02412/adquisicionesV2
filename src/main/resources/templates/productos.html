@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Productos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(-45deg, #2b1d3d, #4a2f4c, #2b3b6c, #1f2b4a); background-size: 400% 400%; animation: gradientBG 15s ease infinite; min-height: 100vh; padding: 40px 20px; color: #fff; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .container { max-width: 1000px; margin: auto; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .container.fade-out { opacity: 0; transform: translateY(20px); transition: all 0.3s ease-in; }
+        h1, h2 { font-weight: 600; margin-bottom: 15px; letter-spacing: 1px; }
+        hr { border: 0; height: 1px; background: rgba(255, 255, 255, 0.2); margin: 25px 0; }
+        .db-badge { display: inline-block; background: rgba(0, 255, 136, 0.15); border: 1px solid rgba(0, 255, 136, 0.3); padding: 5px 15px; border-radius: 20px; font-size: 13px; color: #bbfac0; margin-bottom: 20px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; font-size: 14px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .back-link:hover { color: #fff; background: rgba(255,255,255,0.1); transform: translateX(-5px); }
+        .back-link:active { transform: scale(0.92); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 8px; font-size: 13px; color: rgba(255,255,255,0.8); }
+        input, select { width: 100%; padding: 12px 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #fff; font-size: 14px; outline: none; transition: 0.3s; }
+        select option { background: #2b1d3d; color: #fff; }
+        input:focus, select:focus { border-color: #fff; background: rgba(255, 255, 255, 0.1); }
+        input[readonly] { background: rgba(0, 0, 0, 0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
+        button { background: linear-gradient(90deg, #481d4a, #44599a); border: none; padding: 12px 25px; border-radius: 8px; color: white; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+        button:hover { filter: brightness(1.15); transform: translateY(-2px); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(0, 0, 0, 0.2); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; font-size: 14px; }
+        th { background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+        td { border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.9); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255, 255, 255, 0.05); }
+        .btn-action { display: inline-flex; justify-content: center; align-items: center; width: 32px; height: 32px; border-radius: 6px; color: white; text-decoration: none; font-size: 13px; transition: 0.3s; margin-right: 5px; }
+        .btn-action.edit { background: rgba(0, 123, 255, 0.4); border: 1px solid rgba(0, 123, 255, 0.6); }
+        .btn-action.edit:hover { background: rgba(0, 123, 255, 0.8); }
+        .btn-action.delete { background: rgba(220, 53, 69, 0.4); border: 1px solid rgba(220, 53, 69, 0.6); }
+        .btn-action.delete:hover { background: rgba(220, 53, 69, 0.8); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a th:href="@{/menu(db=${dbUsada})}" class="back-link"><i class="fa-solid fa-arrow-left"></i> Volver al Menú</a>
+    <h1>Gestión de Productos</h1>
+    <div class="db-badge"><i class="fa-solid fa-server"></i> Base de datos activa: <strong th:text="${dbUsada}"></strong></div>
+    <hr>
+    <h2>
+        <i class="fa-solid fa-box-archive"></i> 
+        <span th:text="${productoEdit != null ? 'Editar Producto' : 'Registrar Producto'}"></span>
+    </h2>
+    <form th:action="@{/productos/guardar}" method="POST">
+        <input type="hidden" name="dbType" th:value="${dbUsada}">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Código:</label>
+                <input type="text" name="codigo" required th:value="${productoEdit != null ? productoEdit.codigo : ''}" th:readonly="${productoEdit != null}">
+            </div>
+            <div class="form-group">
+                <label>Nombre del Producto:</label>
+                <input type="text" name="nombre" required th:value="${productoEdit != null ? productoEdit.nombre : ''}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Precio (Q):</label>
+                <input type="number" step="0.01" name="precio" required th:value="${productoEdit != null ? productoEdit.precio : ''}">
+            </div>
+            <div class="form-group">
+                <label>Stock:</label>
+                <input type="number" name="stock" required th:value="${productoEdit != null ? productoEdit.stock : ''}">
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label>Proveedor:</label>
+            <select name="proveedor.nitProveedor" required>
+                <option value="">Seleccione un proveedor</option>
+                <option th:each="pr : ${proveedores}" th:value="${pr.nitProveedor}" th:text="${pr.nombreComercial + ' (' + pr.nitProveedor + ')'}" th:selected="${productoEdit != null and productoEdit.proveedor.nitProveedor == pr.nitProveedor}"></option>
+            </select>
+        </div>
+        <button type="submit">
+            <i class="fa-solid fa-floppy-disk"></i> 
+            <span th:text="${productoEdit != null ? 'Actualizar Producto' : 'Guardar Producto'}"></span>
+        </button>
+        <a th:if="${productoEdit != null}" th:href="@{/productos(db=${dbUsada})}" class="back-link" style="margin-top: 10px; margin-bottom: 0;">Cancelar Edición</a>
+    </form>
+    <h2 style="margin-top: 40px;"><i class="fa-solid fa-list"></i> Lista de Productos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Proveedor</th>
+                <th th:if="${session.usuarioLogueado != null and session.usuarioLogueado.rol.idRol == 1}">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${productos}">
+                <td th:text="${p.codigo}"></td>
+                <td th:text="${p.nombre}"></td>
+                <td th:text="${'Q ' + #numbers.formatDecimal(p.precio, 1, 'POINT', 2, 'POINT')}"></td>
+                <td th:text="${p.stock}"></td>
+                <td th:text="${p.proveedor != null ? p.proveedor.nombreComercial : 'Sin proveedor'}"></td>
+                <td th:if="${session.usuarioLogueado != null and session.usuarioLogueado.rol.idRol == 1}">
+                    <a th:href="@{/productos/editar/{codigo}(codigo=${p.codigo}, db=${dbUsada})}" class="btn-action edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                    <a th:href="@{/productos/eliminar/{codigo}(codigo=${p.codigo}, db=${dbUsada})}" class="btn-action delete" title="Eliminar" onclick="return confirm('¿Está seguro?');"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(productos)}">
+                <td colspan="6" style="text-align: center; color: rgba(255,255,255,0.5);">No hay productos registrados.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    document.querySelector('.back-link').addEventListener('click', function(e) {
+        if(this.getAttribute('href').includes('/menu')) {
+            e.preventDefault(); const destino = this.getAttribute('href');
+            document.querySelector('.container').classList.add('fade-out'); 
+            setTimeout(() => { window.location.href = destino; }, 300);
+        }
+    });
+</script>
+</body>
+</html>

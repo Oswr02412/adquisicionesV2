@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Módulo de Reportes - Adquisiciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #2b1d3d, #4a2f4c, #2b3b6c, #1f2b4a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            width: 850px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-card h2 {
+            margin-bottom: 5px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 24px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .db-badge {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #bbfac0;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        }
+
+        .btn-report {
+            display: flex; align-items: center; justify-content: flex-start; gap: 12px;
+            padding: 15px 20px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px;
+            color: white; text-decoration: none; font-size: 14px;
+            font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .btn-report:hover {
+            background: linear-gradient(90deg, #1d334a, #447a9a);
+            border-color: transparent; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-report i { font-size: 18px; width: 25px; text-align: center; color: #a4c8e1; }
+    </style>
+</head>
+<body>
+
+<div class="menu-card">
+    <div class="header-section">
+        <a th:href="@{/menu(db=${dbUsada})}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Volver al Menú
+        </a>
+        <div class="db-badge">
+            <i class="fa-solid fa-server"></i> Conectado a: <span th:text="${dbUsada}"></span>
+        </div>
+    </div>
+    
+    <h2>Consultas y Reportes Gerenciales</h2>
+    <p style="margin-bottom: 30px; font-size: 14px; color: rgba(255,255,255,0.7);">Seleccione el reporte que desea generar para el Sistema de Adquisiciones</p>
+
+    <div class="menu-grid">
+        <a th:href="@{/reportes/historial-compras(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-clock-rotate-left"></i> Historial de Compras por Artículo
+        </a>
+        <a th:href="@{/reportes/ranking-proveedores(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-trophy"></i> Ranking Top 5 Proveedores
+        </a>
+        <a th:href="@{/reportes/analisis-ofertas(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-scale-balanced"></i> Análisis de Ofertas por Orden
+        </a>
+        <a th:href="@{/reportes/pedidos-pendientes(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-clipboard-list"></i> Reporte de Pedidos Pendientes
+        </a>
+        <a th:href="@{/reportes/ordenes-activas(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-folder-open"></i> Vista de Órdenes Activas (VIEW)
+        </a>
+        <a th:href="@{/reportes/gasto-departamental(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-chart-pie"></i> Análisis de Gasto Departamental
+        </a>
+        <a th:href="@{/reportes/eficiencia-compras(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-stopwatch"></i> Eficiencia del Proceso de Compra
+        </a>
+        <a th:href="@{/reportes/variacion-precios(db=${dbUsada})}" class="btn-report">
+            <i class="fa-solid fa-money-bill-trend-up"></i> Evolución y Variación de Precios
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

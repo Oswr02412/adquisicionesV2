@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Compras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: #1f2b4a; color: #fff; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .report-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; width: 90%; max-width: 1000px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { margin-bottom: 20px; color: #a4c8e1; }
+        .btn-back { display: inline-block; background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: rgba(0,0,0,0.2); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(255,255,255,0.1); font-weight: bold; color: #bbfac0; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        .error { color: #ff7675; background: rgba(255,118,117,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="report-card">
+    <a th:href="@{/reportes(db=${dbUsada})}" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver a Reportes</a>
+    
+    <h2><i class="fa-solid fa-clock-rotate-left"></i> Historial de Compras por Artículo</h2>
+    
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    <table th:if="${datos != null and !datos.isEmpty()}">
+        <thead>
+            <tr>
+                <th>Artículo</th>
+                <th>Proveedor</th>
+                <th>Precio Acordado</th>
+                <th>Fecha de Resolución</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="fila : ${datos}">
+                <td th:text="${fila.Articulo}"></td>
+                <td th:text="${fila.Proveedor}"></td>
+                <td th:text="${'Q ' + fila.Precio}"></td>
+                <td th:text="${fila.Fecha}"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p th:if="${datos != null and datos.isEmpty()}" style="color: #aaa; text-align: center; padding: 20px;">No hay datos registrados para generar este reporte.</p>
+</div>
+
+</body>
+</html>
